@@ -12,6 +12,9 @@ function mergeCsv($filename, $fw)
     $rows = [];
     $i = 0;
     while (($row = fgetcsv($fp)) && ++$i < 50) {
+        $row[]=explode('/',$filename)[2] ;
+        $row[]=explode('/',$filename)[3] ;
+        $row[]=explode('.',explode('/',$filename)[4])[0] ;
         $rows[] = $row;
     }
     fclose($fp);
@@ -41,11 +44,11 @@ function tree($dir, $fw)
                 array_push($arr, $dirr);
                 if (is_dir($dirr)) {
                     // 写入文件夹名
-                    fputcsv($fw, [$file]);
+//                    fputcsv($fw, [$file]);
                     tree($dirr, $fw);
                 } else {
                     // 写入
-                    fputcsv($fw, [$file]);
+//                    fputcsv($fw, [$file]);
                     mergeCsv($dirr, $fw);
                 }
             }
@@ -59,7 +62,7 @@ $fw = fopen('./output.csv', 'a');
 
 
 // 写入标题行
-$top = '标题,备注,优先级,执行者,开始时间,截止时间,创建者,创建时间,是否完成,完成时间,分组,列表,子任务,延误天数,已延误,标签';
+$top = '标题,备注,优先级,执行者,开始时间,截止时间,创建者,创建时间,是否完成,完成时间,分组,列表,子任务,延误天数,已延误,标签,部门,月份,模块';
 fputcsv($fw,explode(',',iconv('utf-8', 'gbk//ignore',$top)));
 
 // 执行
