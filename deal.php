@@ -1,5 +1,16 @@
 <?php
 
+
+
+require_once './hours.php';
+define('WH_BEGIN', [9,30]);
+define('WH_END', [18,0]);
+define('WH_SKIP_DAYS', []);
+ define('WH_SKIP_DATES', []);
+ define('WH_WORK_DATES', []);
+
+//get_working_hours('2017-03-31 09:30:00', '2017-04-01 16:30:00');
+
 /**
  * 合并csv
  */
@@ -12,10 +23,22 @@ function mergeCsv($filename, $fw)
     $rows = [];
     $i = 0;
     while (($row = fgetcsv($fp)) && ++$i < 50) {
+        // 获取部门和月份
         $row[]=explode('/',$filename)[2] ;
         $row[]=explode('/',$filename)[3] ;
         $row[]=explode('.',explode('/',$filename)[4])[0] ;
+
+        // 计算工时
+        if($row[4] != '' && $row[9] !=''){
+            $begin = date('Y-m-d H:i:s',strtotime($row[4]));
+            $end = date('Y-m-d H:i:s',strtotime($row[9]));
+           $row[] = round(get_working_hours($begin,$end),1);
+
+        }else{
+            $row[] = '/';
+        }
         $rows[] = $row;
+
     }
     fclose($fp);
     foreach ($rows as $k=>$row) {
@@ -62,7 +85,7 @@ $fw = fopen('./output.csv', 'a');
 
 
 // 写入标题行
-$top = '标题,备注,优先级,执行者,开始时间,截止时间,创建者,创建时间,是否完成,完成时间,分组,列表,子任务,延误天数,已延误,标签,部门,月份,模块';
+$top = '标题,备注,优先级,执行者,开始时间,截止时间,创建者,创建时间,是否完成,完成时间,分组,列表,子任务,延误天数,已延误,标签,部门,月份,模块,工时(小时)';
 fputcsv($fw,explode(',',iconv('utf-8', 'gbk//ignore',$top)));
 
 // 执行
