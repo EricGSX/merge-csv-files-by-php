@@ -25,13 +25,13 @@ function mergeCsv($filename, $fw)
     while (($row = fgetcsv($fp)) && ++$i < 50) {
         // 获取部门和月份
         $row[]=explode('/',$filename)[2] ;
-        $row[]=explode('/',$filename)[3] ;
-        $row[]=explode('.',explode('/',$filename)[4])[0] ;
+        // $row[]=explode('/',$filename)[3] ;
+        $row[]=explode('.',explode('/',$filename)[3])[0] ;
 
         // 计算工时
-        if($row[4] != '' && $row[9] !=''){
-            $begin = date('Y-m-d H:i:s',strtotime($row[4]));
-            $end = date('Y-m-d H:i:s',strtotime($row[9]));
+        if($row[5] != '' && $row[10] !=''){
+            $begin = date('Y-m-d H:i:s',strtotime($row[5]));
+            $end = date('Y-m-d H:i:s',strtotime($row[10]));
            $row[] = round(get_working_hours($begin,$end),1);
 
         }else{
@@ -85,7 +85,7 @@ $fw = fopen('./output.csv', 'a');
 
 
 // 写入标题行
-$top = '标题,备注,优先级,执行者,开始时间,截止时间,创建者,创建时间,是否完成,完成时间,分组,列表,子任务,延误天数,已延误,标签,部门,月份,模块,工时(小时)';
+$top = '标题,上级任务,备注,优先级,执行者,开始时间,截止时间,创建者,创建时间,是否完成,完成时间,分组,列表,延误天数,已延误,标签,部门,模块,工时(小时)';
 fputcsv($fw,explode(',',iconv('utf-8', 'gbk//ignore',$top)));
 
 // 执行
