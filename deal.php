@@ -22,7 +22,7 @@ function mergeCsv($filename, $fw)
     $fp = fopen('tmp.csv', 'r');
     $rows = [];
     $i = 0;
-    while (($row = fgetcsv($fp)) && ++$i < 50) {
+    while (($row = fgetcsv($fp)) && ++$i < 10000) {
         // 获取部门和月份
         $row[]=explode('/',$filename)[2] ;
         // $row[]=explode('/',$filename)[3] ;
